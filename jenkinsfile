@@ -9,7 +9,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/BThangaraju/calculator.git'
+                git 'https://github.com/Devanshi-Bavaria/SPE-Mini-Project.git'
             }
         }
 
