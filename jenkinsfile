@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "calculator"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/BThangaraju/calculator.git'
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE}")
+                }
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                script {
+                    docker.withRegistry('', 'DockerHubCred') {
+                        sh "docker tag calculator Gasolinaaa/calculator:latest"
+                        sh "docker push Gasolinaaa/calculator:latest"
+                    }
+                }
+            }
+        }
+
+        stage('Run Ansible') {
+            steps {
+                ansiblePlaybook(
+                    playbook: 'deploy.yml',
+                    inventory: 'inventory'
+                )
+            }
+        }
+    }
+}

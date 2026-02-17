@@ -1,0 +1,22 @@
+---
+- name: Pull Docker Image from Docker Hub
+  hosts: localhost
+  connection: local
+  become: false
+
+  tasks:
+    - name: Pull Docker Image
+      docker_image:
+        name: "Gasolinaaa/calculator"
+        source: pull
+      register: docker_pull_result
+
+    - name: Display Docker Pull Result
+      debug:
+        var: docker_pull_result
+        
+    - name: Running container
+      shell: docker rm -f calculator || true
+
+    - name: Start container
+      shell: docker run -d --name calculator Gasolinaaa/calculator 
